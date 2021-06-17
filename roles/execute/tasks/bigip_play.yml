@@ -1,0 +1,9 @@
+- name: get F5 information create by kz
+  bigip_command: 
+    commands: "{{hostvars[inventory_hostname]['input_command']}}"
+    provider： "{{provider}}"
+  register: result
+  
+  
+- name: call save result function
+  include_tasks: save_result.yml

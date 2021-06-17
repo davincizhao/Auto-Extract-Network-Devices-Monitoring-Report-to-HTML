@@ -1,0 +1,41 @@
+- name: print_output
+  debug: 
+    msg: "{{hostvars[inventory_hostname].result}}"
+  tags: print_output
+  when: hostvars[inventory_hostname].result.stdout | length > 0
+  
+  
+- name: save result into log file
+  local_action: lineinfile line="\n <div>style='background-color:LightGray;'. <strong>\n 
+  ********************************************************************
+  \n ***Host_ip*{{inventory_hostname}}
+  \n ***Domain*{{hostvars[inventory_hostname]['domain']}}
+  \n *** run command* {{hostvars[inventory_hostname]['input_command'][my_idx]}}</strong> \n 
+  *********************************************************************
+  </div> \n
+  \n {{item}} \n 
+  ********************************************************************\n 
+    insertafter=EOF
+    dest="{{hostvars['localhost']['dest_file']}}"
+  loop: "{{result.stdout}}"
+  loop_control: 
+    index_var: my_idx
+  when: hostvars[inventory_hostname].result.stdout | length > 0
+
+
+- name: warning when result is none
+  local_action: lineinfile line="\n <div>style='background-color:LightGray;'. <strong>\n 
+  ********************************************************************
+  \n ***Host_ip*{{inventory_hostname}}
+  \n ***Domain*{{hostvars[inventory_hostname]['domain']}}
+  \n *** run command* {{hostvars[inventory_hostname]['input_command'][my_idx]}}</strong> \n 
+  *********************************************************************
+  </div> \n
+  \n This enquire can't get the result, please double check command or search result is empty \n 
+  ********************************************************************\n 
+    insertafter=EOF
+    dest="{{hostvars['localhost']['dest_file']}}"
+
+  when: not hostvars[inventory_hostname].result.stdout
+
+  

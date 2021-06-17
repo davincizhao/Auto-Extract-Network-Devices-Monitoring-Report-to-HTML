@@ -1,0 +1,21 @@
+f5_transport： cli
+f5_timeout: 60
+f5_provider:
+  server: "{{ansible_host}}"
+  user: "{{ansible_user}}"
+  password: "{{ansible_password}}"
+  transport: "{{f5_transport}}"
+  timeout: "{{f5_timeout}}"
+  validate_certs: false
+  
+  
+jump_host: awx
+jump_hosts:
+    j1: '-o ProxyCommand=''ssh -W %h:%p -q j1_username@j1_host_ip '''
+    
+    
+device_pass_vault: !vault |
+  $ANSIBLE_VAULT;1.2;AES256;
+  898298048239048028340283409820348027890789797
+  THISISEXAMPLE OF VAULT STING ENCRYPT PASSWORD
+  7289347923740297834092

@@ -1,0 +1,23 @@
+<!doctype html>
+  <html>
+    <head>
+      <title> Welcome automatiom platform to Ansible</title>
+      <style>
+        h1 {text-align: center;}
+        .center {
+                margin: auto;
+                width: 80%;
+                border: 3px solid #73AD21;
+                padding: 10px;
+                }
+      </style>
+    </head>
+    <body>  
+      <div class="center">
+      <pre>
+        <p> {{lookup('file', hostvars['localhost']['dest_file'].splitlines()|join('<br>'))}} 
+        </p>
+      </pre>
+    </body>
+  </html>
+      

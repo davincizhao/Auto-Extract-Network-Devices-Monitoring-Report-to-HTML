@@ -1,0 +1,7 @@
+---
+- name: print_out in tasks/main.yml
+  debug: 
+    msg: "{{hostvars[inventory_hostname]['input_command']}}-{{ansible_network_os}}_play.yml"
+    
+- name: run different network device, according to device brand f5,cp,juniper,nxs
+  include_tasks: "{{ansible_network_os}}_play.yml"

@@ -1,0 +1,34 @@
+---
+#- name: create folder to keep file
+#  file: path=/home/  state=directory
+
+- name: simplify the path
+  set_facts: 
+    path_report: /home/
+    html_name: "{{hostvars['localhost']['html_name']}}"
+    
+- name: move log to server
+  copy: 
+    src: "{{hostvars['localhost']['dest_file']}}"
+    dest: "/tmp/{{html_name}}"
+    
+    
+- name: generate index.html_name
+  template: 
+    src: index.html.j2
+    dest: "/tmp/{{html_name}}"
+    mode: 0666
+    
+- name: highlight keywork green color
+  replace: 
+    path: "/tmp/{{html_name}}"
+    regexp: "{{item}}"
+    replace: '<span style="background-color:yellow;">{{item}}</span>'
+  loop:
+    - ': offline'
+    - ': down'
+    - 'Unable'
+    - 'Offline'
+    
+    
+    

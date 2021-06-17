@@ -1,0 +1,60 @@
+---
+- name: set basic environment in localhost
+  hosts: localhost
+  gather_facts: yes
+  tasks: 
+    - name: get_time zone to convert AWX container time zone UTC
+      command: "date '+%Y-%b-%d_%H:%M'"
+      register: AU_timez
+      environment: 
+        TZ: Australia/Sydney
+        
+    - name: print out time zone
+      debug: 
+        msg: "{{AU_timez}}"
+      tags： print_output
+      
+    - name: define name variables
+      set_facts: 
+        html_name: "{{project_name}}_report_{{INVENTORY_LOCATION}}.html"
+        Now_time: "{{AU_timez.stdout}}"
+        Year: "{{AU_timez.stdout.split(-)[0]}}"
+        cacheable: yes
+      delegate_to: localhost
+      
+      
+    - name: print_output
+      debug: 
+        msg: "{{lookup('pipe', 'pwd')}}
+              {{lookup('pipe', 'whoami')}}
+              {{inventory_hostname}}"
+              
+      tags: print_output
+      
+    - name: create log file
+      blockinfile: 
+        create: yes
+        dest: "{{dest_file}}"
+        content: |
+            "
+            <h1>***{{Now_time}}
+            *location*{{INVENTORY_LOCATION}}
+            **{{project_name}}**
+            </h1>
+            "
+      delegate_to: localhost
+      
+      
+- name: run network device command playbook
+  hosts: "{{group_run_command}}"
+  gather_facts: no
+  roles: 
+    - execute
+    
+- name: create html from templates
+  hosts: localhost
+  gather_facts: no
+  roles: 
+    - create_html
+    - push_artifactory
+    

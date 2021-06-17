@@ -1,0 +1,67 @@
+---
+all: 
+  children: 
+    F5_GTM_GROUP:
+      hosts: 
+        10.x.x.1:
+          domain: hostname1
+        10.x.x.2: 
+          domain: hostname2
+      vars: 
+        ansible_connection: local or cli 
+        ansible_os: bigip
+        input_command: 
+          - "show sys cpu"
+          - "show ..."
+    F5_LTM_GROUP:
+      hosts: 
+        10.x.x.3:
+          domain: hostname3
+        10.x.x.3: 
+          domain: hostname4
+      vars: 
+        ansible_connection: local or cli 
+        ansible_os: bigip
+        input_command: 
+          - "list ltm"
+          - "show ..."      
+          
+    Juniper_GROUP:
+      hosts: 
+        10.x.x.5:
+          domain: hostname5
+        10.x.x.6: 
+          domain: hostname6
+      vars: 
+        ansible_connection: local
+        ansible_os: junos
+        input_command: 
+          - "show chassis"
+          - "show ..."   
+          
+    Checkpoint_GROUP:
+      hosts: 
+        10.x.x.7:
+          domain: hostname7
+        10.x.x.8: 
+          domain: hostname8
+      vars: 
+        ansible_connection: network_cli
+        ansible_network_os: ios
+        ansible_os: cp
+        input_command: 
+          - "cphaprob stat"
+          - "cphaprob -a if"                   
+          
+    Log_server_GROUP:
+      hosts:
+        10.x.x.9: 
+          domain: hostname9
+          
+    group_by_location:
+      children: 
+        F5_GTM_GROUP:
+        F5_LTM_GROUP:
+        Juniper_GROUP:
+        Checkpoint_GROUP:
+        

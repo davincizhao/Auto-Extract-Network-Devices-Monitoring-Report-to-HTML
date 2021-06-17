@@ -1,0 +1,8 @@
+- name: get juniper information create by kz
+  junos_command: 
+    commands: "{{hostvars[inventory_hostname]['input_command']}}"
+  register: result
+  
+  
+- name: call save result function
+  include_tasks: save_result.yml

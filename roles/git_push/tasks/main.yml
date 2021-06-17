@@ -1,0 +1,9 @@
+---
+- name: run the bash shell script to git push 
+  command: sh git_push.sh log_{{html_name.split('.')[0]}}.log
+  become: yes
+  become_user: "{{username}}"
+  args： 
+    chdir: "{{path}}"
+  register: git_result
+  
